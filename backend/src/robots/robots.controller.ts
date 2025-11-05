@@ -21,22 +21,27 @@ export class RobotsController {
   }
 
   @Get()
-  findAll() {
-    return this.robotsService.findAll();
+  findLatest(){
+    return this.robotsService.findLatest();
   }
+  // /////////////////////////////////////////////////////////
+  // @Get()
+  // findAll() {
+  //   return this.robotsService.findAll();
+  // }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.robotsService.findOne(+id);
-  }
+  // @Get(':id')
+  // findOne(@Param('id') id: string) {
+  //   return this.robotsService.findOne(+id);
+  // }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateRobotDto: UpdateRobotDto) {
-    return this.robotsService.update(+id, updateRobotDto);
-  }
+  // @Patch(':id')
+  // update(@Param('id') id: string, @Body() updateRobotDto: UpdateRobotDto) {
+  //   return this.robotsService.update(+id, updateRobotDto);
+  // }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.robotsService.remove(+id);
-  }
+  // @Delete(':id')
+  // remove(@Param('id') id: string) {
+  //   return this.robotsService.remove(+id);
+  // }
 }
