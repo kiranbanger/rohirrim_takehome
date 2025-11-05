@@ -13,6 +13,13 @@ function App() {
     </>
   )
 }
+function DirectionalButton({value}){
+  return (
+    <button className='directional'>
+      {value}
+    </button>
+  )
+}
 
 function TableSpace({value, updatePos}) {
   return (
@@ -32,22 +39,26 @@ function TableTop(){
 
     const response = await axios.post('http://localhost:3000/robots', data)
     console.log('POST API response: ', response)
+    // TODO put X (or emoji) where robot should be, facing North
   }
+
+  const y_axis = [4,3,2,1,0]
+  const x_axis = [0,1,2,3,4]
   return(
     <>
-      <div className='tablerow'>
-        <TableSpace value={[0,4]} updatePos={() => updateRobotPosition(0, 4, 'S')}></TableSpace>
-        <TableSpace value={[1,4]} updatePos={() => console.log('Clicked TableSpace [0,0]')}></TableSpace>
-        <TableSpace value={[2,4]} updatePos={() => console.log('Clicked TableSpace [0,0]')}></TableSpace>
-        <TableSpace value={[3,4]} updatePos={() => console.log('Clicked TableSpace [0,0]')}></TableSpace>
-        <TableSpace value={[4,4]} updatePos={() => console.log('Clicked TableSpace [0,0]')}></TableSpace>
+      <div>
+        { y_axis.map( (j) => (
+          <div className='tablerow'>
+            { x_axis.map( (i) => (
+              <TableSpace value={[i,j]} updatePos={() => updateRobotPosition(i, j, 'S')}></TableSpace>            
+            ))}
+          </div>  
+        ))}
       </div>
-      <div className='tablerow'>
-        <TableSpace value={[0,0]} updatePos={() => console.log('Clicked TableSpace [1,0]')}></TableSpace>
-        <TableSpace value={[0,0]} updatePos={() => console.log('Clicked TableSpace [1,0]')}></TableSpace>
-        <TableSpace value={[0,0]} updatePos={() => console.log('Clicked TableSpace [1,0]')}></TableSpace>
-        <TableSpace value={[0,0]} updatePos={() => console.log('Clicked TableSpace [1,0]')}></TableSpace>
-        <TableSpace value={[0,0]} updatePos={() => console.log('Clicked TableSpace [1,0]')}></TableSpace>
+      <div>
+          <DirectionalButton value='Left'></DirectionalButton> 
+          <DirectionalButton value='Move'></DirectionalButton>
+          <DirectionalButton value='Right'></DirectionalButton>
       </div>
     </>
   )
