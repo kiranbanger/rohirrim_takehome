@@ -16,8 +16,8 @@ export class RobotsController {
   constructor(private readonly robotsService: RobotsService) {}
 
   @Post()
-  create(@Body() createRobotDto: CreateRobotDto) {
-    return this.robotsService.create(createRobotDto);
+  create(@Body() params: any) {
+    return this.robotsService.create(params);
   }
 
   @Get()

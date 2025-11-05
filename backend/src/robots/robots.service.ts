@@ -11,8 +11,14 @@ export class RobotsService {
     private robotRepository: typeof Robot,
   ){}
   create(createRobotDto: CreateRobotDto) {
-    // return 'This action adds a new robot';
-    return this.robotRepository.create(createRobotDto as any);
+    const newRow: CreateRobotDto = {
+      x_coord: createRobotDto.x_coord,
+      y_coord: createRobotDto.y_coord,
+      facing: createRobotDto.facing,
+      status: true,
+    };
+    // TODO - update all existing rows to have status false
+    return this.robotRepository.create(newRow as any);
   }
 
   findAll() {
