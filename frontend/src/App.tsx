@@ -21,11 +21,16 @@ function App() {
   )
 }
 
-function ReportButton(){
-//  const response = await axios.get('http://localhost:3000/robots')
-
+interface ReportButtonProps {
+  robotLocation: number[], 
+  robotDirection : RobotDirection
+}
+function ReportButton({robotLocation, robotDirection}: ReportButtonProps){
+  const getReport = () => {
+    alert(`Robot is at ${robotLocation[0]}, ${robotLocation[1]} and is facing ${robotDirection}.`)
+  } 
   return ( //add function to make GET request
-    <button className='report'>
+    <button className='report' onClick={getReport}>
       Report
     </button>
   )
@@ -139,7 +144,7 @@ function TableTop({robotLocation, setRobotLocation, robotDirection, setRobotDire
           <DirectionalButton value='Right' updateDir={() => updateRobotDirection('right')} />
       </div>
       <div>
-        <ReportButton/>
+        <ReportButton robotDirection={robotDirection} robotLocation={robotLocation}/>
       </div>
     </>
   )
