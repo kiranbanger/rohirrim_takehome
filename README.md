@@ -15,6 +15,8 @@ I took the instruction:
 to mean that the Robot should display the same behavior when the Left/Right Arrow keys are pressed as it does when the Left/Right Buttons on the page are clicked, and not to mean that the Robot should move Left/Right when the arrow keys are pressed. I chose to do this to keep the behavior consistent, even though it might be less intuitive since the instructions explicitly state:
 >LEFT and RIGHT will rotate the robot 90 degrees in the specified direction without changing the position of the robot
 
+Pressing and releasing the Up Arrow key will simulate the behavior of the Move Button.
+
 ## Unit tests
 I did not have time to add unit tests for either the frontend or backend. At a minimum, I would add the following given more time:
 - tests for each endpoint in the backend
