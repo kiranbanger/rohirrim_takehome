@@ -4,11 +4,12 @@ import axios from 'axios'
 
 function App() {
   const [robotLocation, setRobotLocation] = useState([0,0])
+  const [robotDirection, setRobotDirection] = useState('N')
 
   return (
     <>
       <div>
-        <TableTop robotLocation={robotLocation} setRobotLocation={setRobotLocation}/>
+        <TableTop robotLocation={robotLocation} setRobotLocation={setRobotLocation} robotDirection={robotDirection} setRobotDirection={setRobotDirection}/>
       </div>
     </>
   )
@@ -21,10 +22,17 @@ function ReportButton(){
     </button>
   )
 }
-
-function DirectionalButton({value}){
+function MoveButton(){
   return (
-    <button className='directional'>
+    <button className='move'>
+      Move
+    </button>
+  )
+}
+
+function DirectionalButton({value, updateDir}){
+  return (
+    <button className='directional' onClick={updateDir}>
       {value}
     </button>
   )
@@ -38,16 +46,34 @@ function TableSpace({x,y, value='', updatePos}) {
   );
 }
 
-function TableTop({robotLocation, setRobotLocation}){
-  async function updateRobotPosition(x = 0, y = 0, f = 'N'){ // add types
+function TableTop({robotLocation, setRobotLocation, robotDirection, setRobotDirection}){
+  async function updateRobotPosition(x = 0, y = 0){ // add types
     const data = {
       'x_coord' : x, 
       'y_coord' : y, 
-      'facing' : f
+      'facing' : robotDirection
     }
     setRobotLocation([x,y]);
     const response = await axios.post('http://localhost:3000/robots', data)
     console.log('POST API response: ', response)
+  }
+  const leftMap = {
+    'N':'W',
+    'E':'N',
+    'S':'E',
+    'W':'S'
+  }
+  const rightMap = {
+    'N':'E',
+    'E':'S',
+    'S':'W',
+    'W':'N'
+  }
+  async function updateRobotDirection(direction='left'){
+    const newDir = direction == 'left' ? leftMap[robotDirection] : rightMap[robotDirection]
+    console.log('NEW DIRECTION: ', newDir)
+    setRobotDirection(newDir)
+    console.log('New Robot Direction: ', setRobotDirection)
   }
 
   const y_axis = [4,3,2,1,0]
@@ -64,9 +90,9 @@ function TableTop({robotLocation, setRobotLocation}){
         ))}
       </div>
       <div>
-          <DirectionalButton value='Left'></DirectionalButton> 
-          <DirectionalButton value='Move'></DirectionalButton>
-          <DirectionalButton value='Right'></DirectionalButton>
+          <DirectionalButton value='Left' updateDir={() => updateRobotDirection('left')} />
+          <MoveButton />
+          <DirectionalButton value='Right' updateDir={() => updateRobotDirection('right')} />
       </div>
       <div>
         <ReportButton/>
