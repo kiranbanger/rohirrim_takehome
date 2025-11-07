@@ -22,9 +22,9 @@ function ReportButton(){
     </button>
   )
 }
-function MoveButton(){
+function MoveButton({moveRobot}){
   return (
-    <button className='move'>
+    <button className='move' onClick={moveRobot}>
       Move
     </button>
   )
@@ -73,9 +73,29 @@ function TableTop({robotLocation, setRobotLocation, robotDirection, setRobotDire
     const newDir = direction == 'left' ? leftMap[robotDirection] : rightMap[robotDirection]
     console.log('NEW DIRECTION: ', newDir)
     setRobotDirection(newDir)
-    console.log('New Robot Direction: ', setRobotDirection)
   }
 
+  async function moveRobot(){
+    const [ x, y ]= robotLocation
+    let [ newX, newY ] = robotLocation
+    console.log('current position: ', x, y)
+    if(robotDirection == 'E' && x < 4){
+      newX = x + 1
+    }
+    if(robotDirection == 'W' && x > 0){
+      newX = x-1
+    }
+    if(robotDirection == 'N' && y < 4){
+      newY = y+1
+    }
+    if(robotDirection == 'S' && y > 0){
+      newY = y-1
+    }
+    setRobotLocation([newX, newY])
+    console.log('new position: ', newX, newY )
+    // TODO add warning if out of bounds
+    updateRobotPosition(newX, newY)
+  }
   const y_axis = [4,3,2,1,0]
   const x_axis = [0,1,2,3,4]
   return(
@@ -91,7 +111,7 @@ function TableTop({robotLocation, setRobotLocation, robotDirection, setRobotDire
       </div>
       <div>
           <DirectionalButton value='Left' updateDir={() => updateRobotDirection('left')} />
-          <MoveButton />
+          <MoveButton moveRobot={moveRobot}/>
           <DirectionalButton value='Right' updateDir={() => updateRobotDirection('right')} />
       </div>
       <div>
