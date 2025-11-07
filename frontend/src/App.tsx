@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import './App.css'
 import axios from 'axios'
 
@@ -76,6 +76,18 @@ interface TableTopProps{
   setRobotDirection: (x: RobotDirection) => void 
 }
 function TableTop({robotLocation, setRobotLocation, robotDirection, setRobotDirection} : TableTopProps){
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await axios.get('http://localhost:3000/robots')
+      //console.log('GET response: ', response.data[0])
+      const data = response.data[0]
+      // TODO - add validation checks for x,y, facing
+      setRobotLocation([data.x_coord, data.y_coord])
+      setRobotDirection(data.facing)
+    }
+    fetchData()
+  }, [setRobotLocation, setRobotDirection])
+
   async function updateRobotPosition(x = 0, y = 0){
     const data = {
       'x_coord' : x, 
@@ -84,7 +96,7 @@ function TableTop({robotLocation, setRobotLocation, robotDirection, setRobotDire
     }
     setRobotLocation([x,y]);
     const response = await axios.post('http://localhost:3000/robots', data)
-    console.log('POST API response: ', response)
+    //console.log('POST API response: ', response)
   }
   const leftMap = {
     [RobotDirection.N]: RobotDirection.W,

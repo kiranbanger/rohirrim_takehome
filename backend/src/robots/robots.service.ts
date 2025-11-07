@@ -10,7 +10,7 @@ export class RobotsService {
   constructor(
     @InjectModel(Robot)
     private robotRepository: typeof Robot,
-  ){}
+  ) {}
 
   async create(createRobotDto: CreateRobotDto) {
     const newRow: CreateRobotDto = {
@@ -27,7 +27,7 @@ export class RobotsService {
     }
     // gather all ids
     // set status to false
-    latest.forEach( (l: Robot) => {
+    latest.forEach((l: Robot) => {
       void this.updateStatus(l.id);
     });
     return this.robotRepository.create(newRow as any);
@@ -35,7 +35,7 @@ export class RobotsService {
 
   findLatest(){
     return this.robotRepository.findAll({
-      attributes: ['id'],
+      //attributes: ['id'],
       where: { status: true },
     });
   }
