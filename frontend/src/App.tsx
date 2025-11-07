@@ -32,7 +32,7 @@ function ReportButton({robotLocation, robotDirection}: ReportButtonProps){
   const getReport = () => {
     alert(`Robot is at ${robotLocation[0]}, ${robotLocation[1]} and is facing ${robotDirection}.`)
   } 
-  return ( //add function to make GET request
+  return (
     <button className='report' onClick={getReport}>
       Report
     </button>
@@ -143,12 +143,22 @@ function TableTop({robotLocation, setRobotLocation, robotDirection, setRobotDire
   const y_axis = [4,3,2,1,0]
   const x_axis = [0,1,2,3,4]
   return(
-    <>
+    <div onKeyUp={(e) => {
+      if (e.key == 'ArrowLeft') {
+        updateRobotDirection('left')
+      }
+      if (e.key == 'ArrowRight') {
+        updateRobotDirection('right')
+      }
+      if (e.key == 'ArrowUp'){
+        moveRobot()
+      }
+      }}>
       <div>
         { y_axis.map( (j) => (
           <div className='tablerow'>
             { x_axis.map( (i) => (
-              <TableSpace x={i} y={j} value={(robotLocation[0] == i && robotLocation[1] == j) ? 'R' : ''} updatePos={updateRobotPosition}></TableSpace>            
+              <TableSpace x={i} y={j} value={(robotLocation[0] == i && robotLocation[1] == j) ? '🤖' : ''} updatePos={updateRobotPosition} />            
             ))}
           </div>  
         ))}
@@ -161,7 +171,7 @@ function TableTop({robotLocation, setRobotLocation, robotDirection, setRobotDire
       <div>
         <ReportButton robotDirection={robotDirection} robotLocation={robotLocation}/>
       </div>
-    </>
+    </div>
   )
 }
 
