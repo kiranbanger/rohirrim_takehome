@@ -15,6 +15,9 @@ function App() {
   return (
     <>
       <div>
+        Current Direction: {robotDirection}
+      </div>
+      <div>
         <TableTop robotLocation={robotLocation} setRobotLocation={setRobotLocation} robotDirection={robotDirection} setRobotDirection={setRobotDirection}/>
       </div>
     </>
