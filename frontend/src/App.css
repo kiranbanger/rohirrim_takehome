@@ -8,4 +8,6 @@
 .tablespace {
   border-color: black;
   border-radius: 0;
+  min-width: 50px;
+  min-height: 50px;
 }

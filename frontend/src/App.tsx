@@ -3,16 +3,25 @@ import './App.css'
 import axios from 'axios'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [robotLocation, setRobotLocation] = useState([0,0])
 
   return (
     <>
       <div>
-        <TableTop/>
+        <TableTop robotLocation={robotLocation} setRobotLocation={setRobotLocation}/>
       </div>
     </>
   )
 }
+
+function ReportButton(){
+  return ( //add function to make GET request
+    <button className='report'>
+      Report
+    </button>
+  )
+}
+
 function DirectionalButton({value}){
   return (
     <button className='directional'>
@@ -21,25 +30,24 @@ function DirectionalButton({value}){
   )
 }
 
-function TableSpace({value, updatePos}) {
+function TableSpace({x,y, value='', updatePos}) {
   return (
-    <button className='tablespace' onClick={updatePos}>
+    <button className={`tablespace ${x}xcoord ${y}ycoord`} onClick={updatePos}>
       {value}
     </button>
   );
 }
 
-function TableTop(){
+function TableTop({robotLocation, setRobotLocation}){
   async function updateRobotPosition(x = 0, y = 0, f = 'N'){ // add types
     const data = {
       'x_coord' : x, 
       'y_coord' : y, 
       'facing' : f
     }
-
+    setRobotLocation([x,y]);
     const response = await axios.post('http://localhost:3000/robots', data)
     console.log('POST API response: ', response)
-    // TODO put X (or emoji) where robot should be, facing North
   }
 
   const y_axis = [4,3,2,1,0]
@@ -50,7 +58,7 @@ function TableTop(){
         { y_axis.map( (j) => (
           <div className='tablerow'>
             { x_axis.map( (i) => (
-              <TableSpace value={[i,j]} updatePos={() => updateRobotPosition(i, j, 'S')}></TableSpace>            
+              <TableSpace x={i} y={j} value={(robotLocation[0] == i && robotLocation[1] == j) ? 'R' : ''} updatePos={() => updateRobotPosition(i, j, 'S')}></TableSpace>            
             ))}
           </div>  
         ))}
@@ -59,6 +67,9 @@ function TableTop(){
           <DirectionalButton value='Left'></DirectionalButton> 
           <DirectionalButton value='Move'></DirectionalButton>
           <DirectionalButton value='Right'></DirectionalButton>
+      </div>
+      <div>
+        <ReportButton/>
       </div>
     </>
   )
