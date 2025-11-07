@@ -2,9 +2,15 @@ import { useState } from 'react'
 import './App.css'
 import axios from 'axios'
 
+enum RobotDirection {
+  N ='N',
+  E ='E', 
+  S = 'S', 
+  W = 'W',
+}
 function App() {
   const [robotLocation, setRobotLocation] = useState([0,0])
-  const [robotDirection, setRobotDirection] = useState('N')
+  const [robotDirection, setRobotDirection] = useState<RobotDirection>(RobotDirection.N)
 
   return (
     <>
@@ -16,13 +22,15 @@ function App() {
 }
 
 function ReportButton(){
+//  const response = await axios.get('http://localhost:3000/robots')
+
   return ( //add function to make GET request
     <button className='report'>
       Report
     </button>
   )
 }
-function MoveButton({moveRobot}){
+function MoveButton({moveRobot}: {moveRobot: () => void}){
   return (
     <button className='move' onClick={moveRobot}>
       Move
@@ -30,7 +38,11 @@ function MoveButton({moveRobot}){
   )
 }
 
-function DirectionalButton({value, updateDir}){
+interface DirectionalButtonProps {
+  value: string,
+  updateDir: () => void
+}
+function DirectionalButton({value, updateDir}: DirectionalButtonProps){
   return (
     <button className='directional' onClick={updateDir}>
       {value}
@@ -38,16 +50,28 @@ function DirectionalButton({value, updateDir}){
   )
 }
 
-function TableSpace({x,y, value='', updatePos}) {
+interface TableSpaceProps {
+  x: number,
+  y: number, 
+  value: string, 
+  updatePos : (x: number, y: number) => void
+}
+function TableSpace({x,y, value='', updatePos}: TableSpaceProps) {
   return (
-    <button className={`tablespace ${x}xcoord ${y}ycoord`} onClick={updatePos}>
+    <button className={`tablespace ${x}xcoord ${y}ycoord`} onClick={() => updatePos(x,y)}>
       {value}
     </button>
   );
 }
 
-function TableTop({robotLocation, setRobotLocation, robotDirection, setRobotDirection}){
-  async function updateRobotPosition(x = 0, y = 0){ // add types
+interface TableTopProps{
+  robotLocation: number[], 
+  setRobotLocation: (x: number[]) => void, 
+  robotDirection: RobotDirection, 
+  setRobotDirection: (x: RobotDirection) => void 
+}
+function TableTop({robotLocation, setRobotLocation, robotDirection, setRobotDirection} : TableTopProps){
+  async function updateRobotPosition(x = 0, y = 0){
     const data = {
       'x_coord' : x, 
       'y_coord' : y, 
@@ -58,19 +82,19 @@ function TableTop({robotLocation, setRobotLocation, robotDirection, setRobotDire
     console.log('POST API response: ', response)
   }
   const leftMap = {
-    'N':'W',
-    'E':'N',
-    'S':'E',
-    'W':'S'
+    [RobotDirection.N]: RobotDirection.W,
+    [RobotDirection.E]: RobotDirection.N,
+    [RobotDirection.S]: RobotDirection.E,
+    [RobotDirection.W]: RobotDirection.S
   }
   const rightMap = {
-    'N':'E',
-    'E':'S',
-    'S':'W',
-    'W':'N'
+    [RobotDirection.N]: RobotDirection.E,
+    [RobotDirection.E]: RobotDirection.S,
+    [RobotDirection.S]: RobotDirection.W,
+    [RobotDirection.W]: RobotDirection.N
   }
-  async function updateRobotDirection(direction='left'){
-    const newDir = direction == 'left' ? leftMap[robotDirection] : rightMap[robotDirection]
+  async function updateRobotDirection(buttonVal='left'){
+    const newDir = buttonVal == 'left' ? leftMap[robotDirection] : rightMap[robotDirection]
     console.log('NEW DIRECTION: ', newDir)
     setRobotDirection(newDir)
   }
@@ -79,16 +103,16 @@ function TableTop({robotLocation, setRobotLocation, robotDirection, setRobotDire
     const [ x, y ]= robotLocation
     let [ newX, newY ] = robotLocation
     console.log('current position: ', x, y)
-    if(robotDirection == 'E' && x < 4){
+    if(robotDirection == RobotDirection.E && x < 4){
       newX = x + 1
     }
-    if(robotDirection == 'W' && x > 0){
+    if(robotDirection == RobotDirection.W && x > 0){
       newX = x-1
     }
-    if(robotDirection == 'N' && y < 4){
+    if(robotDirection == RobotDirection.N && y < 4){
       newY = y+1
     }
-    if(robotDirection == 'S' && y > 0){
+    if(robotDirection == RobotDirection.S && y > 0){
       newY = y-1
     }
     setRobotLocation([newX, newY])
@@ -104,7 +128,7 @@ function TableTop({robotLocation, setRobotLocation, robotDirection, setRobotDire
         { y_axis.map( (j) => (
           <div className='tablerow'>
             { x_axis.map( (i) => (
-              <TableSpace x={i} y={j} value={(robotLocation[0] == i && robotLocation[1] == j) ? 'R' : ''} updatePos={() => updateRobotPosition(i, j, 'S')}></TableSpace>            
+              <TableSpace x={i} y={j} value={(robotLocation[0] == i && robotLocation[1] == j) ? 'R' : ''} updatePos={updateRobotPosition}></TableSpace>            
             ))}
           </div>  
         ))}
