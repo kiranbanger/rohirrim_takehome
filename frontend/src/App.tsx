@@ -89,7 +89,7 @@ function TableTop({robotLocation, setRobotLocation, robotDirection, setRobotDire
       setRobotDirection(data.facing)
     }
     fetchData()
-  }, [setRobotLocation, setRobotDirection])
+  }, [])
 
   async function updateRobotPosition(x = 0, y = 0){
     const data = {
