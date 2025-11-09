@@ -61,13 +61,16 @@ function DirectionalButton({value, updateDir}: DirectionalButtonProps){
 interface TableSpaceProps {
   x: number,
   y: number, 
-  value: string, 
+  isOccupied: boolean, 
+  robotDirection: RobotDirection,
   updatePos : (x: number, y: number) => void
 }
-function TableSpace({x,y, value='', updatePos}: TableSpaceProps) {
+function TableSpace({x,y, isOccupied=false, robotDirection, updatePos}: TableSpaceProps) {
   return (
     <button className={`tablespace ${x}xcoord ${y}ycoord`} onClick={() => updatePos(x,y)}>
-      {value}
+      {isOccupied && (
+        <>🤖 <span className={`directional-arrow ${robotDirection == 'N' ? 'robot-direction-n' : robotDirection == 'E' ? 'robot-direction-e' : robotDirection == 'W' ? 'robot-direction-w' : ''}`}> V </span></>
+      )}
     </button>
   );
 }
@@ -158,7 +161,7 @@ function TableTop({robotLocation, setRobotLocation, robotDirection, setRobotDire
         { y_axis.map( (j) => (
           <div className='tablerow'>
             { x_axis.map( (i) => (
-              <TableSpace x={i} y={j} value={(robotLocation[0] == i && robotLocation[1] == j) ? '🤖' : ''} updatePos={updateRobotPosition} />            
+              <TableSpace x={i} y={j} isOccupied={(robotLocation[0] == i && robotLocation[1] == j)} robotDirection={robotDirection} updatePos={updateRobotPosition} />            
             ))}
           </div>  
         ))}

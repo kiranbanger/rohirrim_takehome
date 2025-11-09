@@ -12,3 +12,16 @@
   min-height: 70px;
   vertical-align: top;
 }
+.directional-arrow.robot-direction-n {
+  transform: rotate(180deg);
+}
+.directional-arrow.robot-direction-e {
+  transform: rotate(270deg);
+}
+.directional-arrow.robot-direction-w {
+  transform: rotate(90deg);
+}
+
+.directional-arrow {
+  position: absolute;
+}
